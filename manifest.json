@@ -1,0 +1,61 @@
+{
+	"manifest_version": 1,
+	"script": "bot.js",
+	"config": {
+		"groups": [			
+			{
+				"name": "Options",
+				"options": [
+                    {
+						"id": "farmDragon",
+						"type": "boolean",
+						"label": "Should the bot farm the dragon?",
+						"default": true
+					},
+					{
+						"id": "dragon",
+						"type": "choice",
+						"label": "Wich dragon to farm",
+						"default": "green",
+						"choices": {
+							"Green Dragon": "green",
+                            "Black Dragon": "black",
+                            "Red Dragon": "red",
+                            "Sin": "sin",
+                            "Legendary Dragon": "legendary",
+                            "Bone Dragon": "bone"
+						}
+					},
+                    {
+                        "id": "sellLoot",
+                        "type": "choice",
+                        "label": "What should the bot do with the loot?",
+                        "default": "inventory",
+						"choices": {
+							"sell for money": "money",
+                            "sell for mats": "mat",
+                            "put in inventory": "inventory"
+						}
+                    }
+				]
+			},
+			{
+				"name": "Debug",
+				"options": [
+					{
+						"id": "debug",
+						"type": "boolean",
+						"label": "Should the bot print verbose debug information?",
+						"default": false
+					},
+					{
+						"id": "prntMatches",
+						"type": "boolean",
+						"label": "Should the bot mark the matches on a temporary image? (This way you can see, what the bot sees.)",
+						"default": false
+					}
+				]
+			}
+		]
+	}
+}

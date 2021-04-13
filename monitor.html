@@ -1,0 +1,30 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <img id="scrnmatches" src="scrnmatches.png" alt="matches" width="100%"/>
+    </body>
+    <script>
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function rel() {
+            await sleep(2000);
+            /*img = document.getElementById("scrn");
+            img.src = "scrn.png?rnr=" + Math.random();*/
+            img = document.getElementById("scrnmatches");
+            img.src = "scrnmatches.png?rnr=" + Math.random();
+            rel();
+
+            // Sleep in loop
+            for (let i = 0; i < 5; i++) {
+                if (i === 3)
+                await sleep(2000);
+                console.log(i);
+            }
+        }
+
+        rel();
+    </script>
+</html>
