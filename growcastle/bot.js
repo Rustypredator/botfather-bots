@@ -1,4 +1,12 @@
+//Config
 var appPackage = "com.raongames.growcastle";
+var accuracy = 0.95;
+var supportedSizes = {
+    "1920x1080": new Size(1920, 1080),
+    "2412x1080": new Size(2412, 1080)
+};
+
+//Colors
 var black = new Color('black');
 var blue = new Color('blue');
 var cyan = new Color('cyan');
@@ -18,16 +26,44 @@ var yellow = new Color('yellow');
 
 if(Android.connected()) {
     Helper.log("Found Device, trying to start bot...");
+    checkPhone();
     main();
 } else {
     Helper.log("No device connected!");
 }
 
+function checkPhone() {
+    Helper.log("Check if app is installed:");
+    if(Android.listPackages().indexOf(appPackage) != -1){
+        Helper.log("App is installed!");
+    } else {
+        Helper.log("App is not installed!");
+        return 1;
+    }
+    Helper.log("Check if resolution is supported:");
+    var size = Android.getSize();
+    var sizeIndex = size.width + 'x' + size.height;
+    if(supportedSizes[sizeIndex] != undefined) {
+        Helper.log("Resolution is supported!");
+    } else {
+        Helper.log("Resolution is not supported! If you can, please submit Screenshots of your game on a GitHub Issue!");
+        return 1;
+    }
+}
+
 function main() {
     Helper.log("Welcome to GrowCastle Bot v1");
-    Helper.log("Checking if the game is installed...");
     Helper.log("Trying to start the game...");
     Android.startApp(appPackage);
+    //create a browser that displays the monitor.html file:
+    if (Config.getValue("prntMatches")) {
+        if (Config.getValue("botFolder") == "") {
+            Helper.log("Bot Folder not set, cannot print matches!");
+            return 1;
+        }
+        var monitorBrowser = new Browser("Monitor", new Size(1024, 720));
+        monitorBrowser.loadUrl("file://" + Config.getValue("botFolder") + "/monitor.html");
+    }
     gameLoop();
 }
 
@@ -59,85 +95,154 @@ function gameLoop() {
 }
 
 function matches(scrn) {
-    //Copy scrn:
-    /*if(Config.getValue("prntMatches")) {
-        scrn.save("scrnmatches.png");
-        var scrnmatches = new Image
-        scrnmatches.load("scrnmatches.png");
-    }*/
     //test:
-    var toTest = {
-        //states
-        main: {
-            tmplt: "templates/state/main.png",
-            score: 0.99
+    var matchesToTest = {
+        "1920x1080": {
+            //states
+            main: {
+                tmplt: "templates/1920x1080/state/main.png",
+                score: accuracy
+            },
+            booting: {
+                tmplt: "templates/1920x1080/state/loadScreen.png",
+                score: accuracy
+            },
+            dailyEvent: {
+                tmplt: "templates/1920x1080/state/event.png",
+                score: accuracy
+            },
+            bossSelection: {
+                tmplt: "templates/1920x1080/state/bossSelection.png",
+                score: accuracy
+            },
+            bossLootScreen: {
+                tmplt: "templates/1920x1080/state/bossLoot.png",
+                score: accuracy
+            },
+            //buttons
+            eventCloseBtn: {
+                tmplt: "templates/1920x1080/btns/btn_closeEvent.png",
+                score: accuracy
+            },
+            dragonStatueBtn: {
+                tmplt: "templates/1920x1080/btns/btn_dragonStatue.png",
+                score: accuracy
+            },
+            greenDragonBtn: {
+                tmplt: "templates/1920x1080/btns/btn_grnDrgn.png",
+                score: accuracy
+            },
+            blackDragonBtn: {
+                tmplt: "templates/1920x1080/btns/btn_blkDrgn.png",
+                score: accuracy
+            },
+            redDragonBtn: {
+                tmplt: "templates/1920x1080/btns/btn_redDrgn.png",
+                score: accuracy
+            },
+            sinDragonBtn: {
+                tmplt: "templates/1920x1080/btns/btn_sinDrgn.png",
+                score: accuracy
+            },
+            legendaryDragonBtn: {
+                tmplt: "templates/1920x1080/btns/btn_lgndryDrgn.png",
+                score: accuracy
+            },
+            boneDragonBtn: {
+                tmplt: "templates/1920x1080/btns/btn_boneDrgn.png",
+                score: accuracy
+            },
+            confirmBossBattleBtn: {
+                tmplt: "templates/1920x1080/btns/btn_confirmBossBattle.png",
+                score: accuracy
+            },
+            bossLootSellMoneyBtn: {
+                tmplt: "templates/1920x1080/btns/btn_sellBossLootMoney.png",
+                score: accuracy
+            },
+            bossLootSellMatBtn: {
+                tmplt: "templates/1920x1080/btns/btn_sellBossLootMat.png",
+                score: accuracy
+            },
+            bossLootGetBtn: {
+                tmplt: "templates/1920x1080/btns/btn_getBossLoot.png",
+                score: accuracy
+            }
         },
-        booting: {
-            tmplt: "templates/state/loadScreen.png",
-            score: 0.99
-        },
-        dailyEvent: {
-            tmplt: "templates/state/event.png",
-            score: 0.99
-        },
-        bossSelection: {
-            tmplt: "templates/state/bossSelection.png",
-            score: 0.99
-        },
-        bossLootScreen: {
-            tmplt: "templates/state/bossLoot.png",
-            score: 0.99
-        },
-        //buttons
-        eventCloseBtn: {
-            tmplt: "templates/btns/btn_closeEvent.png",
-            score: 0.99
-        },
-        dragonStatueBtn: {
-            tmplt: "templates/btns/btn_dragonStatue.png",
-            score: 0.99
-        },
-        greenDragonBtn: {
-            tmplt: "templates/btns/btn_grnDrgn.png",
-            score: 0.99
-        },
-        blackDragonBtn: {
-            tmplt: "templates/btns/btn_blkDrgn.png",
-            score: 0.99
-        },
-        redDragonBtn: {
-            tmplt: "templates/btns/btn_redDrgn.png",
-            score: 0.99
-        },
-        sinDragonBtn: {
-            tmplt: "templates/btns/btn_sinDrgn.png",
-            score: 0.99
-        },
-        legendaryDragonBtn: {
-            tmplt: "templates/btns/btn_lgndryDrgn.png",
-            score: 0.99
-        },
-        boneDragonBtn: {
-            tmplt: "templates/btns/btn_boneDrgn.png",
-            score: 0.99
-        },
-        confirmBossBattleBtn: {
-            tmplt: "templates/btns/btn_confirmBossBattle.png",
-            score: 0.99
-        },
-        bossLootSellMoneyBtn: {
-            tmplt: "templates/btns/btn_sellBossLootMoney.png",
-            score: 0.99
-        },
-        bossLootSellMatBtn: {
-            tmplt: "templates/btns/btn_sellBossLootMat.png",
-            score: 0.99
-        },
-        bossLootGetBtn: {
-            tmplt: "templates/btns/btn_getBossLoot.png",
-            score: 0.99
+        "2412x1080": {
+            //states
+            main: {
+                tmplt: "templates/2412x1080/state/main.png",
+                score: accuracy
+            },
+            booting: {
+                tmplt: "templates/2412x1080/state/loadScreen.png",
+                score: accuracy
+            },
+            dailyEvent: {
+                tmplt: "templates/2412x1080/state/event.png",
+                score: accuracy
+            },
+            bossSelection: {
+                tmplt: "templates/2412x1080/state/bossSelection.png",
+                score: 0.99
+            },
+            bossLootScreen: {
+                tmplt: "templates/2412x1080/state/bossLoot.png",
+                score: accuracy
+            },
+            //buttons
+            eventCloseBtn: {
+                tmplt: "templates/2412x1080/btns/btn_close.png",
+                score: 0.99
+            },
+            dragonStatueBtn: {
+                tmplt: "templates/2412x1080/btns/btn_dragonStatue.png",
+                score: accuracy
+            },
+            greenDragonBtn: {
+                tmplt: "templates/2412x1080/btns/btn_grnDrgn.png",
+                score: accuracy
+            },
+            blackDragonBtn: {
+                tmplt: "templates/2412x1080/btns/btn_blkDrgn.png",
+                score: accuracy
+            },
+            redDragonBtn: {
+                tmplt: "templates/2412x1080/btns/btn_redDrgn.png",
+                score: accuracy
+            },
+            sinDragonBtn: {
+                tmplt: "templates/2412x1080/btns/btn_sinDrgn.png",
+                score: accuracy
+            },
+            legendaryDragonBtn: {
+                tmplt: "templates/2412x1080/btns/btn_lgndryDrgn.png",
+                score: accuracy
+            },
+            boneDragonBtn: {
+                tmplt: "templates/2412x1080/btns/btn_boneDrgn.png",
+                score: accuracy
+            },
+            confirmBossBattleBtn: {
+                tmplt: "templates/2412x1080/btns/btn_confirmBossBattle.png",
+                score: accuracy
+            },
+            bossLootSellMoneyBtn: {
+                tmplt: "templates/2412x1080/btns/btn_sellBossLootMoney.png",
+                score: accuracy
+            },
+            bossLootSellMatBtn: {
+                tmplt: "templates/2412x1080/btns/btn_sellBossLootMat.png",
+                score: accuracy
+            },
+            bossLootGetBtn: {
+                tmplt: "templates/2412x1080/btns/btn_getBossLoot.png",
+                score: accuracy
+            }
         }
     }
+    var toTest = matchesToTest[Android.getSize().width + "x" + Android.getSize().height];
     var allmatches = [];
     var results = {};
     //run checks:
