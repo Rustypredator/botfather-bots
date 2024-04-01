@@ -1,0 +1,18 @@
+{
+	"manifest_version": 1,
+	"script": "bot.js",
+	"config": {
+		"groups": [
+			{
+				"name": "General",
+				"options": [
+					{
+						"id": "botFolder",
+						"type": "string",
+						"label": "Path to the bot folder (needed for image saving)"
+					}
+				]
+			}
+		]
+	}
+}
